@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="sryle.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@200;300;400;500;700;800;900&display=swap" rel="stylesheet">
+    <title>Document</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+</head>
+<body dir="rtl">
+    
+    <section class="project">
+       
+        <!--هذا الجزء خاص بالمدينة والتاريخ-->
+        <div style="margin-top:10px;" class="city" >
+           
+            <div class="city-name" style="color: white;margin-right: 50px;display: flex;justify-content: space-between;" >
+                <div>
+                    <h1 id="city" >درنه</h1>
+                    <h6 id="date" style="font-size: 30px;margin-bottom: 20px;font-weight: 200;"> </h6>
+
+                </div>
+                    <div class="Taces">
+                        <h1>الطقس</h1>
+                        <h1 id="city-t"></h1>
+                    </div>     
+            </div>
+            <hr style="margin: 0px 50px;border-color: rgb(81, 81, 165);">
+
+                <!--نهاية الجزء الخاص بالمدينة والتاريخ-->
+
+
+                <!--هنا نبدأ بالبطاقات الخاصة بالمواقيت-->
+               <div  class="center" style="height: 300px;margin-top: 40px;justify-content: space-around;flex-wrap: wrap; ">
+
+                  <div class="cart">
+                        <div class="hedar">
+                            <h1 id="Asr">الفجر</h1>
+                        </div>
+
+                        <div style="height: 80%;" class="body center" >
+                            <div class="time">
+                                <h1 id="Fajr">  </h1>
+                            </div>
+                        </div>
+                  </div>
+                 <!--///////////////////////////////////////////////////////////-->
+
+                  
+                  <div class="cart" >
+                        <div class="hedar">
+                            <h1>الظهر</h1>
+                        </div>
+
+                        <div style="height: 80%;" class="body center" >
+                            <div class="time">
+                                <h1  id="Dhuhr">  </h1>
+                            </div>
+                        </div>
+                  </div>
+
+                   <!--///////////////////////////////////////////////////////////-->
+   
+                  <div class="cart">
+                        <div class="hedar">
+                            <h1>العصر</h1>
+                        </div>
+
+                        <div style="height: 80%;" class="body center" >
+                            <div class="time">
+                                <h1 id="Asar">  </h1>
+                            </div>
+                        </div>
+                  </div>
+
+                 <!--///////////////////////////////////////////////////////////-->
+                  <div class="cart">
+                        <div class="hedar">
+                            <h1>المغرب</h1>
+                        </div>
+
+                        <div style="height: 80%;" class="body center" >
+                            <div class="time">
+                                <h1 id="Magreb">  </h1>
+                            </div>
+                        </div>
+                  </div>
+
+                    <!--///////////////////////////////////////////////////////////-->
+
+                  <div class="cart">
+                        <div class="hedar">
+                            <h1 >العشاء</h1>
+                        </div>
+
+                        <div style="height: 80%;" class="body center" >
+                            <div class="time">
+                                <h1 id="Esaa">  </h1>
+                            </div>
+                        </div>
+                  </div>
+                    <!--///////////////////////////////////////////////////////////-->
+
+
+             </div>
+
+                    <div class="select-city center">
+                            <select class="select" name="" id="city-select">
+                     
+
+                            </select>
+                    </div>
+        </div>
+
+    </section>
+
+</body>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+
+getTimesCity("Darnah")
+
+ //إضافة الخيارات للقائمة الخاصة بالمدن عن طريق المصفوفة
+ let citys = [
+   {
+  
+    arabicName:"درنه",
+    name:"Darnah"
+   },
+   {
+    arabicName:"بنغازي",
+    name:"Banghāzī"
+   },
+   {
+    arabicName:"مصراته",
+    name:"Mişrātah"
+   },
+   {
+      arabicName:"طرابلس",
+    name:"Ţarābulus"
+   },
+   {
+      arabicName:"الجبل الغربي",
+    name:"Al Jabal al Gharbī"
+   },
+   {
+    arabicName:"الزاويه",
+    name:"Az Zāwiyah"
+   },
+   {
+     arabicName:"غريان",
+    name:"Gharyān"
+   }
+ ]
+ for( let i of citys){
+    const city = `
+       <option >${i.arabicName}</option>
+    `
+    document.getElementById("city-select").innerHTML+=city
+ }
+ 
+ ///////////////////////////////////////////////////////////////////////////////////
+ //هنا سنحدد عند الإختيار من القائمة يجب نداء الدالة الخاصة بالمواقيت بناءا علي الإختيار
+
+ document.getElementById("city-select").addEventListener("change",function(){
+
+    document.getElementById("city").innerHTML = this.value 
+
+    let cityName = ''
+    for(let city of citys){
+        if(city.arabicName == this.value){
+            cityName =city.name
+        }
+    }
+   // let a = 
+    getTimesCity(cityName)
+
+ })
+    
+
+////////////////////////////////////////////////////////////////////////////////
+//هذه الدالة سترسل طلب للموقع الخاص بمواقيت الصلاة ونملئ الطلب في html
+function getTimesCity(cityName){
+    
+let params = {
+     country: "LY",
+     city: cityName
+}
+axios.get('http://api.aladhan.com/v1/timingsByCity', {
+    params:params
+  })
+  .then(function (response) {
+     const timeng = response.data.data.timings
+
+     document.getElementById("Fajr").innerHTML=timeng.Fajr
+     document.getElementById("Dhuhr").innerHTML=timeng.Dhuhr
+     document.getElementById("Asar").innerHTML=timeng.Asr
+     document.getElementById("Magreb").innerHTML=timeng.Maghrib
+     document.getElementById("Esaa").innerHTML=timeng.Firstthird
+    
+       
+    const date = response.data.data.date
+    const day = response.data.data.date.hijri.weekday
+    document.getElementById("date").innerHTML= day.ar +"   "+ date.readable
+ 
+     
+ 
+  })
+    .catch(function (error) {
+      Swal.fire({
+        title:"خطأ!!",
+        text: ` يبدو أن هناك خطأ في السيرفر أو أنك غير متصل بالإنترنت !!
+      أعد الإتصال `,
+       icon:'eror'
+      });
+      document.getElementById("Fajr").innerHTML="!EROR"
+     document.getElementById("Dhuhr").innerHTML="!EROR"
+     document.getElementById("Asar").innerHTML="!EROR"
+     document.getElementById("Magreb").innerHTML="!EROR"
+     document.getElementById("Esaa").innerHTML="!EROR"
+
+     document.getElementById("city").innerHTML="غير موجودة"
+
+
+  })
+}
+
+
+
+</script>
+</html>
